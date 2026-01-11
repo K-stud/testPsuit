@@ -1,0 +1,40 @@
+services:
+  server:
+    image: nginx:1.20.1
+    container_name: tServer
+    ports:
+      - 8085:80
+    volumes: # Bind mount-ы на конфиги и разметку
+      - ./web:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+  database:
+    image: mysql:5.7.41
+    container_name: tDatabase
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - dbStorage:/var/lib/mysql # Привязка Volume для хранения БД
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: tPhpMyAdmin
+    environment:
+      PMA_HOST: tDatabase
+      PMA_USER: root
+      PMA_PASSWORD: admin
+    ports:
+      - 8086:80
+    depends_on:
+      - database
+  php:
+    image: php:7.4-fpm
+    container_name: tPhp
+    volumes:
+      - ./php:/var/www/html # Bind mount на PHP исходный код
+
+volumes:
+  dbStorage: # Volume для хранения БД
