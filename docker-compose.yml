@@ -34,7 +34,7 @@ services:
     image: php:7.4-fpm
     container_name: tPhp
     volumes:
-      - ./php:/var/www/html # Bind mount на PHP исходный код
+      - ./web:/var/www/html # Bind mount на PHP исходный код
 
 volumes:
   dbStorage: # Volume для хранения БД
