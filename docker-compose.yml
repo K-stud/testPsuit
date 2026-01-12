@@ -14,11 +14,10 @@ services:
     container_name: tDatabase
     environment:
       MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: testdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: testdb # Особенный флаг для Docker
     volumes:
-      - dbStorage:/var/lib/mysql # Привязка Volume для хранения БД
+      - tDatabaseData:/var/lib/mysql # Привязка Volume для хранения БД
+      - ./mysql/scripts/:/docker-entrypoint-initdb.d/
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: tPhpMyAdmin
@@ -37,4 +36,4 @@ services:
       - ./web:/var/www/html # Bind mount на PHP исходный код
 
 volumes:
-  dbStorage: # Volume для хранения БД
+  tDatabaseData:
