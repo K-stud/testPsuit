@@ -18,7 +18,7 @@ services:
     volumes:
       - tDatabaseData:/var/lib/mysql # Привязка Volume для хранения БД
       - ./mysql/scripts/:/docker-entrypoint-initdb.d/
-      - ./data/images/:/data/images # Привязываю volume с изображениями
+      - ./data/images/:/data/images/
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: tPhpMyAdmin
@@ -35,7 +35,7 @@ services:
     container_name: tPhp
     volumes:
       - ./web:/var/www/html # Bind mount на PHP исходный код
-      - ./data/images/:./data/images/
+      - ./data/images/:/data/images/
 
 volumes:
   tDatabaseData:
