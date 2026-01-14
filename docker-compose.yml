@@ -31,7 +31,7 @@ services:
     depends_on:
       - database
   php:
-    image: php:7.4-fpm
+    build: ./docker/php_backend
     container_name: tPhp
     volumes:
       - ./web:/var/www/html # Bind mount на PHP исходный код
