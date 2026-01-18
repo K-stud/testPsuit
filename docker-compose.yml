@@ -1,17 +1,20 @@
 services:
   server:
-    image: nginx:1.20.1
-    container_name: tServer
+    build: ./docker/nginx
+    container_name: t_server
     ports:
       - 8085:80
-    volumes: # Bind mount-ы на конфиги и разметку
-      - ./web:/var/www/html
-      - ./nginx/conf.d:/etc/nginx/conf.d
+    volumes: 
+      - type: bind
+        source: ./www/yii/web
+        target: /var/www/html/web
     depends_on:
       - php
   database:
+
+    # Пока не трогать, но нужно создать для неё Dockerfile
     image: mysql:5.7.41
-    container_name: tDatabase
+    container_name: t_database
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: testdb # Особенный флаг для Docker
@@ -20,10 +23,12 @@ services:
       - ./mysql/scripts/:/docker-entrypoint-initdb.d/
       - ./data/images/:/data/images/
   phpmyadmin:
+
+    # Нужно будет создать для неё Dockerfile
     image: phpmyadmin/phpmyadmin:latest
-    container_name: tPhpMyAdmin
+    container_name: t_phpmyadmin
     environment:
-      PMA_HOST: tDatabase
+      PMA_HOST: t_database
       PMA_USER: root
       PMA_PASSWORD: admin
     ports:
@@ -31,11 +36,20 @@ services:
     depends_on:
       - database
   php:
-    build: ./docker/php_backend
-    container_name: tPhp
+    build: ./docker/php
+    container_name: t_php
     volumes:
-      - ./web:/var/www/html # Bind mount на PHP исходный код
-      - ./data/images/:/data/images/
-
+      - type: bind
+        source: ./www/yii/controllers
+        target: /var/www/yii/controllers
+      - type: bind
+        source: ./www/yii/models
+        target: /var/www/yii/models
+      - type: bind
+        source: ./www/yii/views
+        target: /var/www/yii/views
+      - type: bind
+        source: ./www/yii/web
+        target: /var/www/yii/web
 volumes:
   tDatabaseData:
