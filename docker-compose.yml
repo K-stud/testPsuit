@@ -3,11 +3,11 @@ services:
     build: ./docker/nginx
     container_name: t_server
     ports:
-      - 8085:80
+      - 8080:80
     volumes: 
       - type: bind
-        source: ./www/yii/web
-        target: /var/www/html/web
+        source: ./yii
+        target: /var/www/yii
     depends_on:
       - php
   database:
@@ -40,16 +40,9 @@ services:
     container_name: t_php
     volumes:
       - type: bind
-        source: ./www/yii/controllers
-        target: /var/www/yii/controllers
-      - type: bind
-        source: ./www/yii/models
-        target: /var/www/yii/models
-      - type: bind
-        source: ./www/yii/views
-        target: /var/www/yii/views
-      - type: bind
-        source: ./www/yii/web
-        target: /var/www/yii/web
+        source: ./yii
+        target: /var/www/yii
+    expose:
+      - "9000"
 volumes:
   tDatabaseData:
