@@ -55,6 +55,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         return $this->auth_key;
     }
 
+    public function getUsername()
+    {
+        return $this->user_name;
+    }
+
     /**
      * {@inheritdoc}
      */
