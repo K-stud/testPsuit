@@ -61,6 +61,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        # Ищет файл в папке site, поскольку именован SiteController 
         return $this->render('index');
     }
 

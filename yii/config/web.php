@@ -8,6 +8,7 @@ $config = [
     'id' => 'basic',                    // Первое обязательное свйоство. Изменение приводит к 502. 
     'basePath' => dirname(__DIR__),     // Второе обязательное свойство
     'language' => 'ru',
+    'timeZone' => 'Europe/Samara',
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',

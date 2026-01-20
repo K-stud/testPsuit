@@ -6,6 +6,14 @@ use yii\db\ActiveRecord;
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
+    public function attributeLabels()
+    {
+        return [
+            'username' => 'Логин',
+            'password' => 'Пароль',
+        ];
+    }
+
     # Связывание с таблицей БД
     # Данные о пользователе доступны в таблице 'users' и свободно используются в методах.
     public static function tableName()
@@ -78,4 +86,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->password_hash === $password;
     }
+
+    
 }
