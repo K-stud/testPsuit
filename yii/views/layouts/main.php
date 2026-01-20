@@ -41,7 +41,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     $navItems[] = ['label' => 'Главная', 'url' => ['/site/index']];
         if(Yii::$app->user->isGuest){
             $navItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
-            $navItems[] = ['label' => 'Регистрация', 'url' => ['/site/login']];
+            $navItems[] = ['label' => 'Регистрация', 'url' => ['/site/register']];
         } else {
             $navItems[] = '<li class="nav-item">'
                     . Html::beginForm(['/site/logout'])

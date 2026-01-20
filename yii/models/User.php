@@ -77,6 +77,14 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     }
 
     /**
+     * Генерация токена доступа для работы с API
+     * 
+     * @return nothing
+     */
+    public functino generateAccessToken(){
+        $this->access_token = Yii::$app->security->generateRandomString(64);
+    }
+    /**
      * Validates password
      *
      * @param string $password password to validate
