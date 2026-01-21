@@ -48,6 +48,8 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_name` varchar(50) COLLATE utf16_unicode_ci NOT NULL,
+  `auth_key` varchar(64) COLLATE utf16_unicode_ci NOT NULL,
+  `access_token` varchar(64) COLLATE utf16_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf16_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_name` (`user_name`)
