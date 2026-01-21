@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
+use Yii;
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -76,14 +77,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         return $this->auth_key === $authKey;
     }
 
-    /**
-     * Генерация токена доступа для работы с API
-     * 
-     * @return nothing
-     */
-    public functino generateAccessToken(){
-        $this->access_token = Yii::$app->security->generateRandomString(64);
-    }
     /**
      * Validates password
      *

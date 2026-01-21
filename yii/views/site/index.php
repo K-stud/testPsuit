@@ -14,7 +14,7 @@ $this->title = 'testPsuit Главная';
             <p>Чтобы попасть в галерею войдите или зарегестрируйтесь.</p>
             <div class="d-flex gap-3 justify-content-center align-items-center">
                 <p><a class="btn btn-lg btn-success" href="/site/login">Войти</a></p>
-                <p><a class="btn btn-lg btn-success" href="/site/login">Зарегестрироваться</a></p>
+                <p><a class="btn btn-lg btn-success" href="/site/register">Зарегестрироваться</a></p>
             </div>
     </div>
 </div>

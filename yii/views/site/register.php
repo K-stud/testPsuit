@@ -3,24 +3,22 @@
 /** @var yii\web\View $this */
 /** @var yii\bootstrap5\ActiveForm $form */
 
-/** @var app\models\LoginForm $model */
+/** @var app\models\RegisterForm $model */
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $this->title = 'Регистрация';
-// $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Введите логи и пароль</p>
-
+    <p>Придумайте логин и пароль</p>
     <div class="row">
         <div class="col-lg-5">
-
             <?php $form = ActiveForm::begin([
-                'id' => 'login-form',
+                'id' => 'register-form',
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n{error}",
                     'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
@@ -29,27 +27,17 @@ $this->title = 'Регистрация';
                 ],
             ]); 
             ?>
-
             <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
             <?= $form->field($model, 'password')->passwordInput() ?>
-
-            <?= $form->field($model, 'rememberMe')->checkbox([
-                'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            ]) ?>
+            <?= $form->field($model, 'repeat_password')->passwordInput() ?>
 
             <div class="form-group">
                 <div>
-                    <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    <?= Html::submitButton('Зарегестрироваться', ['class' => 'btn btn-primary', 'name' => 'register-button']) ?>
                 </div>
             </div>
 
             <?php ActiveForm::end(); ?>
-
-            <div style="color:#999;">
-                Можно войти через <strong>admin/admin</strong>.
-            </div>
-
         </div>
     </div>
 </div>

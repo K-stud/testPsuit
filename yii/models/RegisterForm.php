@@ -35,10 +35,11 @@ class RegisterForm extends Model
 
         $user = new User();
         $user->user_name = $this->username;
-        $user->password_hash = Yii::$app->security->generatePassowrdHash($this->password);
-        $user->auth_key =
-        $user->generateAccessToken();
+        $user->password_hash = Yii::$app->security->generatePasswordHash($this->password);
+        $user->auth_key = Yii::$app->security->generateRandomString(64);
+        $user->access_token = Yii::$app->security->generateRandomString(64);
         
+        // Добавить метод проверки успешности операции
         return $user->save();
     }
 
@@ -55,7 +56,7 @@ class RegisterForm extends Model
         }
 
         // Проверка логина
-        if (User::find()->where(['username' => $this->username])->exists()) {
+        if (User::find()->where(['user_name' => $this->username])->exists()) {
             $this->addError('username', 'Такой логин уже занят.');
             return false;
         }
@@ -68,13 +69,12 @@ class RegisterForm extends Model
      * 
      * @return array 
      */
-
     public function attributeLabels()
          {
             return [
                 'username' => 'Логин',
                 'password' => 'Пароль',
-                'rememberMe' => 'Запомнить меня',
+                'repeat_password' => 'Повторите пароль',
             ];
         }
 }
