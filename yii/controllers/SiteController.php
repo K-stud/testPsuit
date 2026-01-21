@@ -20,10 +20,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
+                'only' => ['logout', 'gallery'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'gallery'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -103,10 +103,7 @@ class SiteController extends Controller
 
     public function actionGallery() 
     {
-        if(!Yii::$app->user->isGuest) return $this->render('gallery');
-        
-        Yii::$app->session->setFlash('error','Чтобы попасть в галерею нужно авторизоваться, пожалуйста войдите или зарегестрируйтесь.');
-        return $this->redirect('index');
+        return $this->render('gallery');
     }
 
     /**
