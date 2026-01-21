@@ -19,6 +19,7 @@ class RegisterForm extends Model
         return [
             [['username', 'password', 'repeat_password'], 'required'],
             ['username', 'string', 'min' => 3, 'max' => 30],
+            ['username', 'validateUsername'],
             ['repeat_password', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли должны совпадать.'],
         ];
     }
@@ -49,18 +50,12 @@ class RegisterForm extends Model
      * 
      * @return bool 
      */
-    public function beforeValidate()
+    public function validateUsername()
     {
-        if (!parent::beforeValidate()) {
-            return false;
-        }
-
-        // Проверка логина
         if (User::find()->where(['user_name' => $this->username])->exists()) {
-            $this->addError('username', 'Такой логин уже занят.');
+            $this->addError('username', 'Логин занят.');
             return false;
         }
-        
         return true;
     }
 
