@@ -92,12 +92,21 @@ class SiteController extends Controller
         $model = new RegisterForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->register()){
+            Yii::$app->session->setFlash('success','Регистрация прошла успешно.');
             return $this->redirect(['site/login']);
         }
 
         return $this->render('register', [
             'model' => $model,
         ]);
+    }
+
+    public function actionGallery() 
+    {
+        if(!Yii::$app->user->isGuest) return $this->render('gallery');
+        
+        Yii::$app->session->setFlash('error','Чтобы попасть в галерею нужно авторизоваться, пожалуйста войдите или зарегестрируйтесь.');
+        return $this->redirect('index');
     }
 
     /**

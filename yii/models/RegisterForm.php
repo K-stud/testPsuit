@@ -27,7 +27,7 @@ class RegisterForm extends Model
     /**
      * Регистрация пользователя / Создание записи в БД
      * 
-     * @return array правил валидации
+     * @return array
      */
     public function register()
     {
