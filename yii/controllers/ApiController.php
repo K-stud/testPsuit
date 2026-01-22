@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\rest\ActiveController;
+use yii\rest\DeleteAction;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
@@ -88,13 +89,47 @@ class ApiController extends ActiveController
             if ($model->file->saveAs($path)) {
                 $model->file_name = $model->user_file_name;
                 $model->file_true_name = $trueFileName;
-                $model->file_path = $path;
+                $model->file_path = '/uploads/'.$trueFileName;
                 $model->time_modify = date('Y-m-d H:i:s');
                 $model->save(false); // Сохраняем в базу, без валидации для простоты
-                return ['success' => true, 'filename' => $trueFileName];
+                return $this->asJson(['success' => true, 'filename' => $trueFileName, 'message' => 'Изображение успешно загружено',]);
             }
+            return $this->asJson([
+                'success' => false,
+                'message' => 'Ошибка при загрузке изображения',
+            ]);
         }
-
         return ['success' => false];
     }
+
+    public function actionDelete()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $params = Yii::$app->request->getBodyParams(); // вот правильный способ
+        $id = $params['id'] ?? null;
+
+        if (!$id) {
+            return ['success' => false, 'message' => 'ID не передан'];
+        }
+
+        $model = Image::findOne($id);
+
+        if (!$model) {
+            return ['success' => false, 'message' => 'Not found'];
+        }
+
+
+        // Не удаляет
+        $path = Yii::getAlias('@webroot/uploads/') . $model->true_file_name;
+
+        if (file_exists($path)) {
+            unlink($path);
+        }
+
+        $model->delete();
+
+    return ['success' => true, 'message' => 'Изображение удалено'];
+}
+
 }

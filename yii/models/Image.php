@@ -8,10 +8,20 @@ use Yii;
 class Image extends ActiveRecord {
     public $file;
     public $user_file_name;
-    
+
     public static function tableName()
     {
         return 'images';
+    }
+
+    public static function getById($id)
+    {
+        return self::findOne(['id' -> $id]);
+    }
+
+    public static function getByName($fileName)
+    {
+        return self::findOne(['file_name' -> $fileName]);
     }
 
     public function getId()

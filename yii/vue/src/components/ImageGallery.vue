@@ -1,15 +1,26 @@
-
 <template>
     <div class="img-grid">
+        <p v-if="message" :class="isSuccess ? 'success' : 'error'"> {{ message }} </p>
+
         <form @submit.prevent="uploadImage">
             <input type="file" @change="onFileChange" />
             <input type="text" v-model="userFileName" placeholder="Имя файла" />
             <button type="submit">Загрузить</button>
-         </form>
+        </form><br>
+
         <div class="img-container" v-for="image in images" :key="image.id">
-            <p>{{ image.id }}, {{ image.file_name }}</p>
+            <div>
+                <img :src="image.file_path" alt="изображение" />
+            </div>
+            <div>
+                <strong>Имя:</strong> {{ image.file_name }} <br>
+                <strong>ID:</strong> {{ image.id }}
+            </div>
+            <div>
+                <button @click="deleteImage(image.id)">Удалить</button>
+            </div>
         </div>
-    </div>  
+    </div>
 </template>
 
 <script>
@@ -20,11 +31,17 @@
             return {
                 file: null,
                 userFileName: '',
-                images: []
+                images: [],
+                message: '',
+                isSuccess: false
             }
         },
         mounted() {
-            axios.get('/api/gallery')
+            this.loadImages()
+        },
+        methods: {
+            loadImages() {
+                axios.get('/api/gallery')
                 .then(response => {
                     this.images = response.data;
                 })
@@ -34,10 +51,9 @@
                         console.log(error.response.data);  // реальное сообщение от сервера
                     } else {
                         console.log(error.message);
-                }
-            });
-        },
-        methods: {
+                    }
+                });
+            },
             onFileChange(event){
                 this.file = event.target.files[0];
             },
@@ -50,13 +66,38 @@
 
                 try {
                     const response = await axios.post('/api/upload', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-                console.log('Успех:', response.data);
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                    this.message = response.data.message;
+                    this.isSuccess = true;
+                    this.loadImages()
                 } catch (err) {
                     console.error('Ошибка:', err.response?.data || err.message);
+                    this.isSuccess = false;
                 }
+            },
+
+            async deleteImage(id) {
+                try {
+                    // Передаем id через query string
+                    const response = await axios.delete(`/api/delete?id=${id}`);
+        
+                    if (response.data.success) {
+                        this.message = response.data.message;
+                        this.isSuccess = true;
+                        // Убираем удаленное изображение из массива без перезагрузки страницы
+                        this.images = this.images.filter(img => img.id !== id);
+                        this.loadImages();
+                    } else {
+                        this.message = response.data.message;
+                        this.isSuccess = false;
+                    }
+                } catch (err) {
+                    this.message = err.response?.data?.message || err.message;
+                    this.isSuccess = false;
+                }       
             }
+
         }
     }
 </script>
@@ -68,9 +109,33 @@
         grid-auto-rows: 100px;
         gap: 10px;
     }
+    .img-container {
+    display: flex;
+    flex-wrap: wrap;  
+    gap: 10px;        
+    }
+
+    .img-container > div {
+        flex: 0 1 auto;   
+        width: 300px;     
+        height: 300;     
+    }
+
+    .img-container img {
+        max-width: 100%;   
+        height: auto;      
+        display: block;    
+    }
+
     img {
-        width: 100px;
-        height: 100px;
-        border: 5px solid #ccc; /* Optional: border */
+        width: 300px;
+        height: 300px;
+        border: 3px solid #ccc; /* Optional: border */
+    }
+    .success {
+        color: #2ecc71;
+    }
+    .error {
+        color: #e74c3c;
     }
 </style>
