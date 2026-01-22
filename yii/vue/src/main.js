@@ -1,9 +1,9 @@
 import Vue from 'vue';
+import ImageGallery from './components/ImageGallery.vue';
 
 new Vue({
   el: '#vue-gallery',
-  data: {
-    message: 'Vue работает'
-  },
-  template: '<div>{{ message }}</div>'
+  render: h => {
+    return h(ImageGallery);
+  }
 });

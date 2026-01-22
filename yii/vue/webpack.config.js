@@ -23,6 +23,11 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
+      },
+      {
+        // Обработка css для использования <style> в vue
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
