@@ -1,18 +1,34 @@
+
 <template>
     <div class="img-grid">
-
-            <img class="img-container" v-for="(image, index) in images" :key="index" :src="`${imagePath}${image}`" alt="Image">
-
+        <div class="img-container" v-for="image in images" :key="image.id">
+            <p>{{ image.id }}, {{ image.file_name }}</p>
+        </div>
     </div>  
 </template>
 
 <script>
+    import axios from 'axios'; // Для отправки запросов
+
     export default {
         data() {
             return {
-                imagePath: '/testimages/',
-                images: ['test1.jpeg','test2.jpeg','test3.png','test4.jpeg','test5.png']
+                images: []
             }
+        },
+        mounted() {
+            axios.get('/api/gallery')
+                .then(response => {
+                    this.images = response.data;
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки изображений:');
+                    if (error.response) {
+                        console.log(error.response.data);  // реальное сообщение от сервера
+                    } else {
+                        console.log(error.message);
+                }
+            });
         }
     }
 </script>
