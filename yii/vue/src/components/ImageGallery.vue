@@ -1,6 +1,11 @@
 
 <template>
     <div class="img-grid">
+        <form @submit.prevent="uploadImage">
+            <input type="file" @change="onFileChange" />
+            <input type="text" v-model="userFileName" placeholder="Имя файла" />
+            <button type="submit">Загрузить</button>
+         </form>
         <div class="img-container" v-for="image in images" :key="image.id">
             <p>{{ image.id }}, {{ image.file_name }}</p>
         </div>
@@ -13,6 +18,8 @@
     export default {
         data() {
             return {
+                file: null,
+                userFileName: '',
                 images: []
             }
         },
@@ -29,6 +36,27 @@
                         console.log(error.message);
                 }
             });
+        },
+        methods: {
+            onFileChange(event){
+                this.file = event.target.files[0];
+            },
+            async uploadImage() {
+                if(!this.file) return;
+                
+                const formData = new FormData();
+                formData.append('image',this.file);
+                formData.append('user_file_name', this.userFileName);
+
+                try {
+                    const response = await axios.post('/api/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                console.log('Успех:', response.data);
+                } catch (err) {
+                    console.error('Ошибка:', err.response?.data || err.message);
+                }
+            }
         }
     }
 </script>

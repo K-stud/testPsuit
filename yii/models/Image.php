@@ -6,6 +6,9 @@ use yii\db\ActiveRecord;
 use Yii;
 
 class Image extends ActiveRecord {
+    public $file;
+    public $user_file_name;
+    
     public static function tableName()
     {
         return 'images';

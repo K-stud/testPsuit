@@ -10,7 +10,8 @@ use yii\web\UploadedFile;
 use app\models\Image;
 use yii\web\Response;
 use yii\db\Expression;
-use yii\filters\auth\QueryParamAuth;
+use yii\filters\auth\HttpBearerAuth;
+use yii\web\BadRequestHttpException;
 
 class ApiController extends ActiveController
 {
@@ -41,8 +42,7 @@ class ApiController extends ActiveController
         $behaviors = parent::behaviors();
         $behaviors['contentNegotiator']['formats']['application/json'] = Response::FORMAT_JSON;
         $behaviors['authenticator'] = [
-        'class' => QueryParamAuth::class,
-        'tokenParam' => 'access-token', // GET-параметр
+        'class' => HttpBearerAuth::class,
         ];
 
         $behaviors['access'] = [
@@ -70,5 +70,31 @@ class ApiController extends ActiveController
         ]);
 
         return $provider->getModels();
+    }
+
+    public function actionUpload()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $model = new Image();
+        $model->file = UploadedFile::getInstanceByName('image');
+        $model->user_file_name = Yii::$app->request->post('user_file_name');
+
+        if ($model->file instanceof UploadedFile) {
+            $timestamp = time();
+            $hash = md5($model->file->baseName . $timestamp);
+            $trueFileName = $timestamp.'_'.$hash.'_'.$model->user_file_name.'.'.$model->file->extension;
+            $path = Yii::getAlias('@webroot/uploads/') . $trueFileName;
+
+            if ($model->file->saveAs($path)) {
+                $model->file_name = $model->user_file_name;
+                $model->file_true_name = $trueFileName;
+                $model->file_path = $path;
+                $model->time_modify = date('Y-m-d H:i:s');
+                $model->save(false); // Сохраняем в базу, без валидации для простоты
+                return ['success' => true, 'filename' => $trueFileName];
+            }
+        }
+
+        return ['success' => false];
     }
 }
