@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `images`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `images` (
   `id` bigint(20) unsigned NOT NULL,
-  `file_true_name` varchar(100) COLLATE utf16_unicode_ci NOT NULL,
-  `file_name` varchar(50) COLLATE utf16_unicode_ci NOT NULL,
-  `file_path` varchar(50) COLLATE utf16_unicode_ci NOT NULL,
+  `file_true_name` varchar(255) COLLATE utf16_unicode_ci NOT NULL,
+  `file_name` varchar(100) COLLATE utf16_unicode_ci NOT NULL,
+  `file_path` varchar(4096) COLLATE utf16_unicode_ci NOT NULL,
   `user_name` varchar(50) COLLATE utf16_unicode_ci DEFAULT NULL,
   `user_id` bigint(20) unsigned DEFAULT NULL,
-  `time_modify` time DEFAULT NULL,
+  `time_modify` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_name` (`user_name`),
   KEY `fk_user_id` (`user_id`),
