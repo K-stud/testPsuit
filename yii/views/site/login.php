@@ -47,11 +47,6 @@ $this->title = 'Вход';
             </div>
 
             <?php ActiveForm::end(); ?>
-
-            <div style="color:#999;">
-                Можно войти через <strong>admin/admin</strong>.
-            </div>
-
         </div>
     </div>
 </div>

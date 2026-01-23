@@ -33,9 +33,10 @@ class ApiController extends ActiveController
     {
         $actions = parent::actions();
         
-        // Отключаем create, delete чтобы сделать свой.
+        // Отключаем create, delete, update чтобы сделать свои
         unset($actions['create']);
         unset($actions['delete']);
+        unset($actions['update']);
         return $actions;
     }
 
@@ -92,7 +93,7 @@ class ApiController extends ActiveController
                 $model->file_true_name = $trueFileName;
                 $model->file_path = '/uploads/'.$trueFileName;
                 $model->time_modify = date('Y-m-d H:i:s');
-                $model->save(false); // Сохраняем в базу, без валидации для простоты
+                $model->save(false); // Сохраняем в базу без валидации для простоты
                 return $this->asJson(['success' => true, 'filename' => $trueFileName, 'message' => 'Изображение успешно загружено',]);
             }
             return $this->asJson([
@@ -107,10 +108,7 @@ class ApiController extends ActiveController
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $id = Yii::$app->request->get('id') ?? null;
-
-        //$params = Yii::$app->request->getBodyParams(); 
-        //id = $params['id'] ?? null;
-
+        
         if (!$id) {
             return ['success' => false, 'message' => 'ID не передан'];
         }
@@ -121,8 +119,6 @@ class ApiController extends ActiveController
             return ['success' => false, 'message' => 'Not found'];
         }
 
-
-        // Не удаляет файл
         $path = Yii::getAlias('@webroot/uploads/') . $model->file_true_name;
 
         if (file_exists($path)) {
@@ -136,6 +132,28 @@ class ApiController extends ActiveController
         }
         
         return ['success' => false, 'message' => 'Не удалось найти изображение'];
-}
+    }
 
+    public function actionUpdate() {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $params = json_decode(Yii::$app->request->getRawBody(), true);
+        $id = $params['id'] ?? null;
+        $fileName = $params['file_name'] ?? null;
+
+        if (!$id || !$fileName) {
+            return ['success' => false, 'message' => 'ID или имя файла не переданы'];
+        }
+
+        $model = Image::findOne($id);
+        if (!$model) {
+            return ['success' => false, 'message' => 'Изображение не найдено'];
+        }
+
+        $model->file_name = $fileName;
+            if ($model->save(false)) {
+            return ['success' => true, 'message' => 'Имя файла обновлено'];
+        }
+
+        return ['success' => false, 'message' => 'Ошибка при сохранении'];
+    }
 }
