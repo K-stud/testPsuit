@@ -1,7 +1,6 @@
 <template>
     <div class="img-grid">
-        <p v-if="message" :class="isSuccess ? 'success' : 'error'"> {{ message }} </p>
-
+        <p v-if="message" :class="isSuccess ? 'success' : 'error'"> {{ message }} </p><br>
         <form @submit.prevent="uploadImage">
             <input type="file" @change="onFileChange" />
             <input type="text" v-model="userFileName" placeholder="Имя файла" />
@@ -33,7 +32,8 @@
                 userFileName: '',
                 images: [],
                 message: '',
-                isSuccess: false
+                isSuccess: false,
+                devPath: ''
             }
         },
         mounted() {
@@ -80,13 +80,16 @@
             async deleteImage(id) {
                 try {
                     // Передаем id через query string
-                    const response = await axios.delete(`/api/delete?id=${id}`);
+                    const response = await axios.delete(`/api/delete`,{
+                        params: { id }
+                    });
         
                     if (response.data.success) {
                         this.message = response.data.message;
                         this.isSuccess = true;
-                        // Убираем удаленное изображение из массива без перезагрузки страницы
+                        // Убирание не работет
                         this.images = this.images.filter(img => img.id !== id);
+                        console.log(response.data.path);
                         this.loadImages();
                     } else {
                         this.message = response.data.message;

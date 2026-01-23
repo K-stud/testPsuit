@@ -33,8 +33,9 @@ class ApiController extends ActiveController
     {
         $actions = parent::actions();
         
-        // Отключаем create, чтобы сделать свой.
+        // Отключаем create, delete чтобы сделать свой.
         unset($actions['create']);
+        unset($actions['delete']);
         return $actions;
     }
 
@@ -105,9 +106,10 @@ class ApiController extends ActiveController
     public function actionDelete()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
+        $id = Yii::$app->request->get('id') ?? null;
 
-        $params = Yii::$app->request->getBodyParams(); // вот правильный способ
-        $id = $params['id'] ?? null;
+        //$params = Yii::$app->request->getBodyParams(); 
+        //id = $params['id'] ?? null;
 
         if (!$id) {
             return ['success' => false, 'message' => 'ID не передан'];
@@ -120,16 +122,20 @@ class ApiController extends ActiveController
         }
 
 
-        // Не удаляет
-        $path = Yii::getAlias('@webroot/uploads/') . $model->true_file_name;
+        // Не удаляет файл
+        $path = Yii::getAlias('@webroot/uploads/') . $model->file_true_name;
 
         if (file_exists($path)) {
+            
+            if (!is_writable($path)) {
+                return ['success' => false, 'message' => 'Файл не доступен для удаления'];
+            }
             unlink($path);
+            $model->delete();
+            return ['success' => true, 'message' => 'Изображение удалено', 'path' => $path];
         }
-
-        $model->delete();
-
-    return ['success' => true, 'message' => 'Изображение удалено'];
+        
+        return ['success' => false, 'message' => 'Не удалось найти изображение'];
 }
 
 }
