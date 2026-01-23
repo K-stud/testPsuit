@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `images`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `images` (
-  `id` bigint(20) unsigned NOT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `file_true_name` varchar(255) COLLATE utf16_unicode_ci NOT NULL,
   `file_name` varchar(100) COLLATE utf16_unicode_ci NOT NULL,
   `file_path` varchar(4096) COLLATE utf16_unicode_ci NOT NULL,
