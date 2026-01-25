@@ -21,6 +21,8 @@
         <div class="card-info">
           <div><strong>ID:</strong> {{ image.id }}</div>
           <div><strong>Имя:</strong> {{ image.file_name }}</div>
+          <div><strong>Опубликовал:</strong> {{ image.user_name }}</div>
+          <div><strong>Дата изменения:</strong> {{ image.time_modify }}</div> 
         </div>
 
         <div class="card-actions">
