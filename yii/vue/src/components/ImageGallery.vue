@@ -7,7 +7,7 @@
 
     <div class="upload-section">
       <form @submit.prevent="uploadImage">
-        <input type="file" @change="onFileChange" />
+        <input type="file" @change="onFileChange" accept="image/*" />
         <input type="text" v-model="userFileName" placeholder="Имя файла" />
         <button type="submit">Загрузить</button>
       </form>
@@ -75,11 +75,28 @@ export default {
                 }
             });
         },
-        onFileChange(event){
-            this.file = event.target.files[0];
+        onFileChange(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          // только изображения
+          if (!file.type.startsWith('image/')) {
+            this.message = 'Можно загружать только изображения';
+            this.isSuccess = false;
+            this.file = null;
+            event.target.value = '';
+            return;
+          }
+
+          this.file = file;
         },
+
         async uploadImage() {
-            if(!this.file) return;
+            if(!this.file) {
+              this.message = 'Файл не выбран или не является изображением';
+              this.isSuccess = false;
+              return;
+            }
             
             const formData = new FormData();
             formData.append('image',this.file);
